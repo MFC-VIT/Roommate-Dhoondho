@@ -44,10 +44,10 @@ export const getAllUser = async (req, res) => {
 
 // get a User
 export const getUser = async (req, res) => {
-  
+
   const id = req.params.id;
 
- // Check if the request has an 'Origin' header
+  // Check if the request has an 'Origin' header
   const url = req.get('Origin');
   console.log('Domain:', url);
 
@@ -74,10 +74,10 @@ export const getUser = async (req, res) => {
 
 // get personal details of a User
 export const getPersonalUser = async (req, res) => {
-  
+
   const id = req.params.id;
 
- // Check if the request has an 'Origin' header
+  // Check if the request has an 'Origin' header
   const url = req.get('Origin');
   console.log('Domain:', url);
 
@@ -184,43 +184,43 @@ export const updateUser = async (req, res) => {
     if (id === currentUserId) {
 
 
-        // Define the allowed fields
-        const allowedFields = ['firstname', 'lastname', 'gender', 'regnum', 'mobile'];
+      // Define the allowed fields
+      const allowedFields = ['firstname', 'lastname', 'gender', 'regnum', 'mobile', 'isProfileComplete'];
 
-        // Extract only the allowed fields from the request body
-        const updatedFields = {};
-        allowedFields.forEach(field => {
-          if (req.body[field] !== undefined) {
-            updatedFields[field] = req.body[field];
-          }
-        });
+      // Extract only the allowed fields from the request body
+      const updatedFields = {};
+      allowedFields.forEach(field => {
+        if (req.body[field] !== undefined) {
+          updatedFields[field] = req.body[field];
+        }
+      });
 
-        // Update the gender field only if it is currently null
-        if (user.gender === '' || null) {
-          updatedFields['gender'] = req.body['gender'];
-        } else {
-          delete updatedFields.gender;
-        }
-        
-        // Update the user's profile
-        const updatedUser = await UserModel.findByIdAndUpdate(id, updatedFields, {
-          new: true,
-        });
-        // Remove sensitive information
-        if (updatedUser) {
-          const token = jwt.sign(
-            { username: updatedUser.username, id: updatedUser._id },
-            process.env.JWTKEY
-          );
-          const userDetails = updatedUser._doc;
-          delete userDetails.password;
-          delete userDetails.emailToken;
-          delete userDetails.__v;
-          delete userDetails.createdAt;
-          delete userDetails.updatedAt;
-          delete userDetails.isVerified;
-          res.status(200).json({ user: userDetails, token });
-        }
+      // Update the gender field only if it is currently null
+      if (user.gender === '' || user.gender === null) {
+        updatedFields['gender'] = req.body['gender'];
+      } else {
+        delete updatedFields.gender;
+      }
+
+      // Update the user's profile
+      const updatedUser = await UserModel.findByIdAndUpdate(id, updatedFields, {
+        new: true,
+      });
+      // Remove sensitive information
+      if (updatedUser) {
+        const token = jwt.sign(
+          { username: updatedUser.username, id: updatedUser._id },
+          process.env.JWTKEY
+        );
+        const userDetails = updatedUser._doc;
+        delete userDetails.password;
+        delete userDetails.emailToken;
+        delete userDetails.__v;
+        delete userDetails.createdAt;
+        delete userDetails.updatedAt;
+        delete userDetails.isVerified;
+        res.status(200).json({ user: userDetails, token });
+      }
 
     } else {
       res.status(403).json("Access Denied! You can only update your own profile");
@@ -279,25 +279,25 @@ export const followUser = async (req, res) => {
     try {
       const followUser = await UserModel.findById(id);
       const followingUser = await UserModel.findById(currentUserId);
-      
+
       try {
         const user = await UserModel.findById(currentUserId);
-    
+
         if (user) {
-            if (!followUser.followers.includes(currentUserId)) {
-                await followUser.updateOne({ $push: { followers: currentUserId } });
-                await followingUser.updateOne({ $push: { following: id } });
-                res.status(200).json("User followed!");
-            } else {
-                res.status(403).json("User is Already followed by you");
-            }
+          if (!followUser.followers.includes(currentUserId)) {
+            await followUser.updateOne({ $push: { followers: currentUserId } });
+            await followingUser.updateOne({ $push: { following: id } });
+            res.status(200).json("User followed!");
+          } else {
+            res.status(403).json("User is Already followed by you");
+          }
         }
         else {
-            res.status(404).json("No such user exists that you are trying to follow.");
-            }
-        } catch (error) {
-            res.status(500).json(error);
+          res.status(404).json("No such user exists that you are trying to follow.");
         }
+      } catch (error) {
+        res.status(500).json(error);
+      }
 
     } catch (error) {
       res.status(500).json(error);
@@ -330,22 +330,22 @@ export const UnFollowUser = async (req, res) => {
 
       try {
         const user = await UserModel.findById(currentUserId);
-    
+
         if (user) {
-            if (followUser.followers.includes(currentUserId)) {
-                await followUser.updateOne({ $pull: { followers: currentUserId } });
-                await followingUser.updateOne({ $pull: { following: id } });
-                res.status(200).json("User Unfollowed!");
-            } else {
+          if (followUser.followers.includes(currentUserId)) {
+            await followUser.updateOne({ $pull: { followers: currentUserId } });
+            await followingUser.updateOne({ $pull: { following: id } });
+            res.status(200).json("User Unfollowed!");
+          } else {
             res.status(403).json("User is not followed by you");
-            }
+          }
         }
         else {
-            res.status(404).json("No such user exists that you are trying to unfollow.");
-            }
-        } catch (error) {
-            res.status(500).json(error);
-        }     
+          res.status(404).json("No such user exists that you are trying to unfollow.");
+        }
+      } catch (error) {
+        res.status(500).json(error);
+      }
     } catch (error) {
       res.status(500).json(error);
     }

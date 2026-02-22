@@ -10,10 +10,10 @@ export const logIn = (formData, navigate) => async (dispatch) => {
     dispatch({ type: "AUTH_SUCCESS", data: data });
     toast.success("Logged in successfully.");
     console.log("data: ", data);
-    if(data?.user?.gender !== null){
+    if (data?.user?.gender !== null) {
       navigate("../home", { replace: true });
     }
-    else{
+    else {
       navigate("../profile", { replace: true });
     }
   } catch (error) {
@@ -39,14 +39,14 @@ export const signUp = (formData, navigate) => async (dispatch) => {
     toast.success("Please verify your email. Verification mail sent.");
     navigate("../", { replace: true });
   } catch (error) {
-    // console.log(error);
-    toast.error("Error. Account may already exist. Try resetting password.");
+    const msg = error?.response?.data?.message || error?.response?.data || "Something went wrong. Please try again.";
+    toast.error(`Error: ${msg}`);
     dispatch({ type: "AUTH_FAIL" });
     navigate("../", { replace: true });
   }
 };
 
 
-export const logout = ()=> async(dispatch)=> {
-  dispatch({type: "LOG_OUT"})
+export const logout = () => async (dispatch) => {
+  dispatch({ type: "LOG_OUT" })
 }

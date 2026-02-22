@@ -15,32 +15,54 @@ passport.use(
       passReqToCallback: true,
     },
     async (request, accessToken, refreshToken, profile, done) => {
-      try {
-        let user = await UserModel.findOne({ googleId: profile.id });
+  try {
+    let user = await UserModel.findOne({ googleId: profile.id });
 
-        if (!user) {
-          const name = profile.given_name.split(" ");
-          user = await UserModel.create({
-            googleId: profile.id,
-            username: profile.email,
-            firstname: name[0],
-            lastname: name[name.length - 1],
-            regnum: profile.family_name,
-            profilePicture: profile.picture,
-            isVerified: true,
-            activeChats: [],
-            gender: "",
-          });
-        }
+    if (!user) {
+      
+      user = await UserModel.findOne({ username: profile.email });
 
-        // Generate JWT Token
-        const token = jwt.sign({ id: user._id, email: user.username, firstname: user.firstname, lastname: user.lastname, gender: user.gender, isProfileComplete: user.isProfileComplete }, process.env.JWTKEY, { expiresIn: "7d" });
-        console.log(token)
-        return done(null, { user, token });
-      } catch (err) {
-        return done(err, null);
+      if (user) {
+        
+        user.googleId = profile.id;
+        if (!user.profilePicture) user.profilePicture = profile.picture;
+        user.isVerified = true;
+        await user.save();
+      } else {
+        const name = profile.given_name.split(" ");
+
+        user = await UserModel.create({
+          googleId: profile.id,
+          username: profile.email,
+          firstname: name[0],
+          lastname: name[name.length - 1],
+          regnum: profile.family_name,
+          profilePicture: profile.picture,
+          isVerified: true,
+          activeChats: [],
+          gender: "",
+        });
       }
     }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        gender: user.gender,
+        isProfileComplete: user.isProfileComplete,
+      },
+      process.env.JWTKEY,
+      { expiresIn: "7d" }
+    );
+
+    return done(null, { user, token });
+  } catch (err) {
+    return done(err, null);
+  }
+}
   )
 );
 

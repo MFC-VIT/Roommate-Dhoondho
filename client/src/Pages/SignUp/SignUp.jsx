@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./SignUp.css";
+import signupBg from "../../Assets/signup.jpg";
 import Header from "../../Components/Header/Header";
 import { FcGoogle } from "react-icons/fc";
 import { BsEyeFill } from "react-icons/bs";
@@ -12,8 +13,8 @@ import { toast } from "react-toastify";
 import { signUp } from "../../actions/AuthActions.js";
 import { useDispatch } from "react-redux";
 import { Helmet } from "react-helmet";
-
 import Hotjar from '@hotjar/browser';
+
 const siteId = 3765543;
 const hotjarVersion = 6;
 Hotjar.init(siteId, hotjarVersion);
@@ -151,7 +152,7 @@ function SignUP() {
         <div
           className="md:inline-block md:w-[45%] bg-cover bg-center"
           style={{
-            backgroundImage: `url(${require("../../Assets/signup.jpg")})`,
+            backgroundImage: `url(${signupBg})`,
           }}
         ></div>
         <div className="w-[100%] md:w-[55%] flex justify-center">

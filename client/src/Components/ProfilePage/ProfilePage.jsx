@@ -44,8 +44,7 @@ const Profilepage = () => {
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [formEvent, setFormEvent] = useState(null);
   const [showInfoLabel, setShowInfoLabel] = useState(false);
-  const [isGenderEditable, setIsGenderEditable] = useState( profileData?.gender === "" || profileData?.user?.gender === "");
-  // const [password, setPassword] = useState("");
+const isGenderEditable = !gender || gender === "" || gender === null;  // const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isListingButtonActive, setIsListingButtonActive] = useState(false);
   const [serverMessage, setServerMessage] = useState(null);
