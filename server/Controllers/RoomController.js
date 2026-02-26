@@ -15,6 +15,7 @@ export const createRoom = async (req, res) => {
 
   const { userId } = req.body;
   const newRoom = new needRoomModel(req.body);
+  
 
   try {
     if (id === userId) {
@@ -58,92 +59,65 @@ export const getRoom = async (req, res) => {
 
 // Get all Rooms
 export const getAllRoom = async (req, res) => {
-
-  // Check if the request has an 'Origin' header
   const url = req.get('Origin');
-  console.log('Domain:', url);
 
   if (process.env.NODE_ENV === "production" && url !== process.env.CLIENT_URL) {
-    res.status(403).json({ message: `${process.env.ACCESS_FORBIDDEN_MSG}` });
-    return;
+    return res.status(403).json({ message: `${process.env.ACCESS_FORBIDDEN_MSG}` });
   }
 
   try {
-    const page = parseInt(req.query.page) - 1 || 0;
-    const limit = parseInt(req.query.limit) || 10000000;
-    const skip = page * limit;
+    const { 
+      page = 1, 
+      limit = 10, 
+      sort = "createdAt", 
+      order = "desc", 
+      gender, 
+      year, 
+      preferredBlock, 
+      search 
+    } = req.query;
 
-    let sort = req.query.sort || "createdAt";
+    const query = {};
 
-    req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
-    let sortBy = {};
-    if (sort[1]) {
-      sortBy[sort[0]] = sort[1];
-    } else {
-      sortBy[sort[0]] = "asc";
+    if (gender && gender !== "All") {
+      query.gender = { $in: gender.split(",") };
     }
 
-    let gender = req.query.gender || "All";
-    const genderOptions = ["M", "F"];
+    if (year && year !== "All") {
+      query.year = { $in: year.split(",") };
+    }
 
-    gender === "All"
-      ? (gender = [...genderOptions])
-      : (gender = gender.split(","));
+    if (preferredBlock && preferredBlock !== "All") {
+      query.preferredBlock = { $in: preferredBlock.split(",") };
+    }
 
-    let year = req.query.year || "All";
-    const yearOptions = [1, 2, 3, 4];
+    if (search) {
+      query.$or = [
+        { username: { $regex: search, $options: "i" } },
+        { habits: { $regex: search, $options: "i" } },
+        { desc: { $regex: search, $options: "i" } }
+      ];
+    }
 
-    year === "All" ? (year = [...yearOptions]) : (year = year.split(","));
-
-    let preferredBlock = req.query.preferredBlock || "All";
-
-    const blockOptions = [
-      "A",
-      "B",
-      "B ANNEX",
-      "C",
-      "D",
-      "D ANNEX",
-      "E",
-      "F",
-      "G",
-      "H",
-      "J",
-      "K",
-      "L",
-      "M",
-      "M ANNEX",
-      "N",
-      "P",
-      "Q",
-      "R",
-      "S",
-      "T",
-    ];
-
-    preferredBlock === "All"
-      ? (preferredBlock = [...blockOptions])
-      : (preferredBlock = preferredBlock.split(","));
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const sortOrder = order === "desc" ? -1 : 1;
+    const sortOptions = { [sort]: sortOrder };
 
     const rooms = await needRoomModel
-      .where("gender")
-      .in([...gender])
-      .where("year")
-      .in([...year])
-      .where("preferredBlock")
-      .in([...preferredBlock])
-      .sort(sortBy)
+      .find(query)
+      .sort(sortOptions)
       .skip(skip)
-      .limit(limit)
-      .exec();
+      .limit(parseInt(limit));
 
-    res.status(200).json(rooms);
+    const total = await needRoomModel.countDocuments(query);
+
+    res.status(200).json(
+      rooms
+    );
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error.message });
   }
 };
-
 
 // Update a Room
 export const updateRoom = async (req, res) => {
@@ -158,11 +132,12 @@ export const updateRoom = async (req, res) => {
     return;
   }
 
-  const { userId } = req.body;
+  const { roomId } = req.body;
 
   try {
-    const Room = await needRoomModel.findById(id);
-    if (Room.userId === userId) {
+    const Room = await needRoomModel.findById(roomId);
+    console.log(Room.userId.toString(),id);
+    if (Room.userId.toString() === id) {
       await Room.updateOne({ $set: req.body });
       res.status(200).json("Room Updated");
     } else {
@@ -186,11 +161,10 @@ export const deleteRoom = async (req, res) => {
     return;
   }
 
-  const { userId } = req.body;
+  const { userId,roomId } = req.body;
 
   try {
-    const Room = await needRoomModel.findById(id);
-    console.log("Room userId: ", Room.userId, " userId: ", userId);
+    const Room = await needRoomModel.findById(roomId);
     if (Room.userId.toString() === userId) {
       await Room.deleteOne();
       res.status(200).json("Room deleted successfully");
