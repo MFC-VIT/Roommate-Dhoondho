@@ -83,6 +83,35 @@ export const Listing = () => {
     if (profileData) fetchLikedItems();
   }, []);
 
+  // --- HANDLERS FOR UNLIKING (Removing from Selections) ---
+const handleUnlikeRoommate = async (roommateId) => {
+    try {
+      const currentUserId = profileData?.user?._id || profileData?.id; // Renamed to match backend
+      await axios.put(`${process.env.REACT_APP_SERVER_URL}/user/likesroommate`, {
+        currentUserId, // Changed key from userId to currentUserId
+        roommateId
+      });
+      toast.success("Removed from selections");
+      setRoommatePosts(prev => prev.filter(item => (item?._id || item?.id) !== roommateId));
+    } catch (error) {
+      toast.error("Failed to remove roommate");
+    }
+  };
+
+  const handleUnlikeRoom = async (roomId) => {
+    try {
+      const currentUserId = profileData?.user?._id || profileData?.id; // Renamed to match backend
+      await axios.put(`${process.env.REACT_APP_SERVER_URL}/user/likesroom`, {
+        currentUserId, // Changed key from userId to currentUserId
+        roomId
+      });
+      toast.success("Removed from selections");
+      setRoomPosts(prev => prev.filter(item => (item?._id || item?.id) !== roomId));
+    } catch (error) {
+      toast.error("Failed to remove room");
+    }
+  };
+
   const handleStartChat = async (roommate) => {
     const chat = await startChat({
       _id: roommate._id,
@@ -124,6 +153,10 @@ export const Listing = () => {
                           <div className="card-name">Roommate Posting</div>
                           <div className="card-actions">
                             <button className="chat-button" onClick={() => handleStartChat(item)}>Chat</button>
+                            {/* RE-ADDED MINUS BUTTON FOR UNLIKING */}
+                            <div className="card-add" onClick={() => handleUnlikeRoommate(item?._id)}>
+                              <img src="./image/minus-icon.png" alt="remove" style={{ height: "24px", width: "24px" }} />
+                            </div>
                           </div>
                         </div>
                         <div className="card-preference">
@@ -179,6 +212,10 @@ export const Listing = () => {
                       <div className="card-info">
                         <div className="card-informatios">
                           <div className="card-name">Rank: {room?.rank} - {room?.preferredBlock} Block Posting</div>
+                          {/* RE-ADDED MINUS BUTTON FOR UNLIKING */}
+                          <div className="card-add" onClick={() => handleUnlikeRoom(room?._id)}>
+                            <img src="./image/minus-icon.png" alt="remove" style={{ height: "24px", width: "24px" }} />
+                          </div>
                         </div>
                         <div className="card-preference">
                           <div className="card-rank">
