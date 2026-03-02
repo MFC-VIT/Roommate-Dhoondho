@@ -79,7 +79,7 @@ function Navbar() {
                         : "fa-solid fa-user-group white"
                     }
                   />
-                  My Roomies
+                   Listings
                 </span>
               </button>
             </NavLink>
