@@ -61,20 +61,7 @@ const navigate = useNavigate();
               className="bg-red-500 text-white px-6 py-2 rounded-md w-full"
             >
               Sign in with Google
-            </button>
-
-            <div className="flex items-center w-full my-6">
-              <div className="flex-grow h-px bg-gray-500"></div>
-              <span className="px-2 text-gray-600">OR</span>
-              <div className="flex-grow h-px bg-gray-500"></div>
-            </div>
-
-            <p className="text-sm mt-2">
-              Don't have an account?{" "}
-              <Link to="/signUp" className="underline">
-                Sign Up
-              </Link>
-            </p>
+            </button>            
           </div>
         </div>
       </div>

@@ -79,28 +79,6 @@ function Header() {
           <option value="fr">French</option> */}
         </select>
 
-        <Link to="/">
-          <button
-            className={`${
-              isLogin
-                ? "bg-[#06105A] text-white"
-                : "text-[#06105A] border-[#06105A] border-[1px]"
-            } rounded-[8px] md:px-[2.5rem] md:py-[0.5rem] `}
-          >
-            Login
-          </button>
-        </Link>
-        <Link to="/signUp">
-          <button
-            className={` ${
-              !isLogin
-                ? "bg-[#06105A] text-white"
-                : "text-[#06105A] border-[#06105A] border-[1px]"
-            } rounded-[8px] md:px-[2.25rem] md:py-[0.5rem]  ml-[2rem]`}
-          >
-            Sign Up
-          </button>
-        </Link>
         {/* <a href="https://forms.gle/srKbHdG9oPshAGXF9" target="_blank" rel="noopener noreferrer">
           <button
             className={`rounded-[8px] md:px-[2.25rem] md:py-[0.5rem]  ml-[2rem]`}

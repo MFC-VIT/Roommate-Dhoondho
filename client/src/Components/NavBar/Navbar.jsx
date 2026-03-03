@@ -66,22 +66,6 @@ function Navbar() {
         <ul className={click ? "nav-menu active" : "nav-menu"}>
           <li className="nav-item">
             <NavLink to="/home" className="nav-links" onClick={closeMobileMenu}>
-              <button className="myroomies">
-                {" "}
-                <span
-                  className="button_icon whitespace-nowrap"
-                  onClick={handleClick}
-                >
-                  <i
-                    className={
-                      click
-                        ? "fa-solid fa-user-group blue"
-                        : "fa-solid fa-user-group white"
-                    }
-                  />
-                   Listings
-                </span>
-              </button>
             </NavLink>
           </li>
           <li
