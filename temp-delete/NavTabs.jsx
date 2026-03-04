@@ -461,8 +461,8 @@ function DisplayRoommateCard() {
                             <div className="card-info">
                               <div className="card-informatios">
                                 <div className="card-name">
-                                  {post?.userDetails.firstname ?? "Arjun"}{" "}
-                                  {post?.userDetails.lastname ?? "Sharma"}
+                                  {post?.userDetails.firstname}{" "}
+                                  {post?.userDetails.lastname }
                                 </div>
                                 {userGender && (
                                   <div

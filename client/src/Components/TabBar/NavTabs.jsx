@@ -470,8 +470,8 @@ function DisplayRoommateCard() {
                         <div className="card-info">
                           <div className="card-informatios">
                             <div className="card-name">
-                              {post?.userDetails?.firstname ?? "Arjun"}{" "}
-                              {post?.userDetails?.lastname ?? "Sharma"}
+                              {post?.userDetails?.firstname }{" "}
+                              {post?.userDetails?.lastname }
                             </div>
                             {userGender && (
                               <div
@@ -491,7 +491,7 @@ function DisplayRoommateCard() {
                           <div className="card-preference">
                             <div>
                               <div className="card-preference-title">Rank</div>
-                              <div className="card-preference-content">{post?.rank || '8.98'}</div>
+                              <div className="card-preference-content">{post?.rank}</div>
                             </div>
                             <div>
                               <div className="card-preference-title">Preferred Bed</div>
@@ -503,11 +503,11 @@ function DisplayRoommateCard() {
                             </div>
                             <div>
                               <div className="card-preference-title">Preferred Blocks</div>
-                              <div className="card-preference-content">{post?.preferredBlock || 'A B'}</div>
+                              <div className="card-preference-content">{post?.preferredBlock }</div>
                             </div>
                             <div>
                               <div className="card-preference-title">Vacancy</div>
-                              <div className="card-preference-content">{post?.remaining || '1'}</div>
+                              <div className="card-preference-content">{post?.remaining}</div>
                             </div>
                           </div>
                           <div className="card-habits-section">
