@@ -19,17 +19,13 @@ const UserSchema = mongoose.Schema(
     firstname: {
       type: String,
       default: null,
-      minlength: 1,
-      maxlength: 20,
     },
     lastname: {
       type: String,
       default: null,
-      minlength: 1,
-      maxlength: 20,
     },
     googleId: {
-      type: String, 
+      type: String,
       unique: true,
       sparse: true,
     },
@@ -49,7 +45,7 @@ const UserSchema = mongoose.Schema(
       min: 1,
       max: 5,
     },
-    isRankVerified : {
+    isRankVerified: {
       type: Boolean,
       default: false,
     },
@@ -77,8 +73,8 @@ const UserSchema = mongoose.Schema(
     about: {
       type: String,
     },
-    isProfileComplete:{
-      type:Boolean,
+    isProfileComplete: {
+      type: Boolean,
       default: false,
     },
     isVerified: {
@@ -104,20 +100,20 @@ const UserSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
-    activeChats:[
+    activeChats: [
       {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Chat"
-      }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Chat",
+      },
     ],
-    post:[
+    post: [
       {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Posts"
-      }
-    ]
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Posts",
+      },
+    ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const UserModel = mongoose.model("Users", UserSchema);
