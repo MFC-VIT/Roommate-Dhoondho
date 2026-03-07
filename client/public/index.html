@@ -1,14 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Created by MFC"
-    />
+    <meta name="description" content="Created by MFC" />
     <link rel="apple-touch-icon" href="/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -19,6 +16,20 @@
       src="https://kit.fontawesome.com/b8d7c4f4a4.js"
       crossorigin="anonymous"
     ></script>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-PEBPP3QNGB"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-PEBPP3QNGB");
+    </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -31,7 +42,10 @@
     <title>RoomMate Dhoondo</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app. Report problems: support@mozillavit.in</noscript>
+    <noscript
+      >You need to enable JavaScript to run this app. Report problems:
+      support@mozillavit.in</noscript
+    >
     <div id="root"></div>
     <!--
       This HTML file is a template.
