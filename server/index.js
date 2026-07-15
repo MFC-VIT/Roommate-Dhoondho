@@ -67,7 +67,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 //   allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
 // }));
 app.use(cors());
-
+app.set('trust proxy', 1);
 
 mongoose
   .connect(process.env.MONGO_DB, {
