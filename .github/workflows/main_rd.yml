@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'server/**' 
+      - 'server/**'
   workflow_dispatch:
 
 jobs:
@@ -13,42 +13,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Set up Node.js version
-        uses: actions/setup-node@v4 
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-
+          
       - name: npm install, build, and test
         working-directory: ./server
         run: |
           npm install
           npm run build --if-present
           npm run test --if-present
-
+          
+      # NEW STEP: Zip the contents of the server folder into a single file
+      - name: Zip artifact for deployment
+        working-directory: ./server
+        run: zip -r ../release.zip .
+        
+      # Upload the single zip file instead of the whole folder
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4 
+        uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: ./server # Packages only the backend contents
+          path: ./release.zip 
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    # OIDC permissions (id-token) are no longer required for Publish Profile
     steps:
+      # Downloads the artifact to the current directory
       - name: Download artifact from build job
-        uses: actions/download-artifact@v4 
+        uses: actions/download-artifact@v4
         with:
           name: node-app
-          path: ./server-app 
-
+          path: ./ 
+          
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'RD'
           slot-name: 'Production'
-          # Use the Publish Profile secret instead of the login step
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./server-app
+          # Point OneDeploy directly to the zipped package
+          package: ./release.zip
