@@ -19,7 +19,7 @@ import RoommateRoute from './Routes/RoommateRoute.js'
 import ServerMsgRoute from './Routes/ServerMsgRoute.js'
 
 //import  } from './Middlewares/CORS_Protection.js'
-// Hello World
+// 
 import { verifyJWT_withuserId, verifyJWTForGetRequest } from './Middlewares/verifyJWT.js';
 
 import "./Controllers/Auth.js";
